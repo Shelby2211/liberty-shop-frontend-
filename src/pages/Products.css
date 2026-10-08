@@ -1,0 +1,115 @@
+.products-page {
+  background: var(--bg);
+}
+
+/* ---------- Catalogue bar ---------- */
+
+.catalogue-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding-bottom: 28px;
+  margin-bottom: 36px;
+  border-bottom: 1px solid var(--border);
+}
+
+.catalogue-bar__info h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.catalogue-bar__info span {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ---------- Filters ---------- */
+
+.filters {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-group__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.filter-group__options {
+  display: flex;
+  gap: 5px;
+  padding: 4px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+
+.filter-chip:hover {
+  color: var(--text);
+}
+
+.filter-chip.is-active {
+  background: var(--ink);
+  color: var(--gold);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+  .catalogue-bar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 620px) {
+  .filter-group {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .filter-group__options {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .filter-chip {
+    flex: 1;
+    justify-content: center;
+  }
+}
