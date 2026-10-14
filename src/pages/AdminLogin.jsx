@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function AdminLogin() {
+export default function AdminLogin() {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -17,67 +18,80 @@ function AdminLogin() {
       setLoading(true);
       setError("");
 
+      const API_URL = (
+        import.meta.env.VITE_API_URL ||
+        "http://localhost:5000/api"
+      ).replace(/\/+$/, "");
+
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        API_URL + "/auth/login",
         {
           username,
           password,
-        },
+        }
       );
 
-      localStorage.setItem("admin", JSON.stringify(response.data.admin));
+      if (!response.data?.token || !response.data?.admin) {
+        throw new Error("Réponse de connexion invalide.");
+      }
+
+      localStorage.setItem(
+        "admin",
+        JSON.stringify(response.data.admin)
+      );
 
       localStorage.setItem("adminToken", response.data.token);
 
       navigate("/admin");
     } catch (error) {
-      setError(error.response?.data?.message || "Impossible de se connecter.");
+      setError(
+        error.response?.data?.message ||
+          error.message ||
+          "Impossible de se connecter."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="admin-login">
-      <div className="admin-login-card">
-        <h1>LibertyShop</h1>
+    <main className="admin-login">
+      <h1>LibertyShop</h1>
+      <h2>Connexion administrateur</h2>
 
-        <p>Connexion administrateur</p>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="username">Identifiant</label>
+          <input
+            id="username"
+            type="text"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            placeholder="Votre identifiant"
+            autoComplete="username"
+            required
+          />
+        </div>
 
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Identifiant</label>
+        <div>
+          <label htmlFor="password">Mot de passe</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Votre mot de passe"
+            autoComplete="current-password"
+            required
+          />
+        </div>
 
-            <input
-              type="text"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              placeholder="Votre identifiant"
-              required
-            />
-          </div>
+        {error && <p role="alert">{error}</p>}
 
-          <div>
-            <label>Mot de passe</label>
-
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="Votre mot de passe"
-              required
-            />
-          </div>
-
-          {error && <p className="admin-login-error">{error}</p>}
-
-          <button type="submit" disabled={loading}>
-            {loading ? "Connexion..." : "Se connecter"}
-          </button>
-        </form>
-      </div>
-    </div>
+        <button type="submit" disabled={loading}>
+          {loading ? "Connexion..." : "Se connecter"}
+        </button>
+      </form>
+    </main>
   );
 }
-
-export default AdminLogin;
